@@ -1,5 +1,5 @@
 {
-  "name": "vue-datepicker",
+  "name": "vue-easy-datepicker",
   "version": "0.0.1",
   "description": "Small datepicker for vue",
   "main": "dist/datepicker.umd.js",
