@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import type { DayPickEvent } from "@/components/ui/datepicker/interfaces/day-pick-event.interface";
+import type { DayPickEvent } from "@/interfaces/day-pick-event.interface";
 import { ref, watch } from "vue";
 import { isEqual, getDaysInMonth as fnsGetDaysInMonth } from "date-fns";
 
 const dateEqual = isEqual
 
+interface Dictionary {
+  [key: string]: string | boolean | number
+}
+
 interface DateCell {
   day: number;
   date: Date;
+  className?: Dictionary;
 }
 
-let daySelect = false;
 const today = new Date();
 
 const props = defineProps<{
@@ -23,6 +27,18 @@ const getRemainingDaysInPreviousMonth = (year: number, month: number): DateCell[
   const daysInMonth = getDaysInMonth(year, month - 1);
 
   return daysInMonth.slice(daysInMonth.length - pickerDate);
+}
+
+const getRemainingDaysInNextMonth = (year: number, month: number): DateCell[] => {
+  const pickerDay = new Date(year, month + 1, 0).getDay();
+  const daysInMonth = getDaysInMonth(year, month + 1);
+
+  const DAYS_IN_WEEKS = 7;
+  if (pickerDay !== 0) {
+    return daysInMonth.slice(0, DAYS_IN_WEEKS - pickerDay);
+  }
+
+  return [];
 }
 
 const getDaysInMonth = (year: number, month: number): DateCell[] => {
@@ -40,39 +56,35 @@ const getDaysInMonth = (year: number, month: number): DateCell[] => {
 
 const setDaysArgs = (date: Date): [number, number] => [date.getFullYear(), date.getMonth()];
 
-const getDaysGrid = (date: Date): [DateCell[], DateCell[]] => {
+// todo: cache grid
+const getDaysGrid = (date: Date) => {
+  if (!date) {
+    return [];
+  }
+
   return [
-    getRemainingDaysInPreviousMonth(...setDaysArgs(date)),
-    getDaysInMonth(...setDaysArgs(date))
-  ]
-}
-
-const [_daysPreviousMonth, _days] = getDaysGrid(props.currentDate);
-
-// todo: can be one ref
-const daysPreviousMonth = ref(_daysPreviousMonth);
-const days = ref(_days);
-
-const currentDate = ref<Date>(props.currentDate);
-
-const emits = defineEmits<{
-  (e: 'daySelect', value: DayPickEvent): void
-}>()
-
-const handleDaySelect = (tense: DayPickEvent['state'], date: DayPickEvent['date']) => {
-  emits('daySelect', {state: tense, date});
-  daySelect = true;
+    ...getRemainingDaysInPreviousMonth(...setDaysArgs(date)),
+    ...getDaysInMonth(...setDaysArgs(date)),
+    ...getRemainingDaysInNextMonth(...setDaysArgs(date))
+  ];
 };
 
-watch(() => props.currentDate, (value: Date, oldValue: Date) => {
-  currentDate.value = value
+const currentDate = ref<Date>(props.currentDate);
+const daysGrid = ref<DateCell[]>([]);
+daysGrid.value = getDaysGrid(props.currentDate);
 
-  if (!daySelect) {
-    const [_newDaysPreviousMonth, _newDays] = getDaysGrid(value);
-    daysPreviousMonth.value = _newDaysPreviousMonth;
-    days.value = _newDays;
-  }
-  daySelect = false;
+
+const emits = defineEmits<{
+  (e: 'daySelect', value: Date): void
+}>()
+
+const handleDaySelect = (date: Date) => {
+  emits('daySelect', date);
+};
+
+watch(() => props.currentDate, (value: Date) => {
+  currentDate.value = value
+  daysGrid.value = getDaysGrid(value);
 })
 
 const cleanDate = (date: Date) => new Date(date.toDateString())
@@ -80,18 +92,12 @@ const cleanDate = (date: Date) => new Date(date.toDateString())
 </script>
 
 <template>
-  <template v-for="{day, date} in daysPreviousMonth" :key="day">
-    <div class="cell prevMonth" @click="handleDaySelect('past', date)">
-      <span>
-        {{ day }}
-      </span>
-    </div>
-  </template>
-  <template v-for="{day, date} in days" :key="day">
-    <div class="cell" @click="handleDaySelect('present', date)"
+  <template v-for="{day, date, className} in daysGrid" :key="date">
+    <div class="cell" @click="handleDaySelect(date)"
          :class="{
             currentDay: dateEqual(date, cleanDate(today)),
-            selected: dateEqual(date, cleanDate(selectedDate))
+            selected: dateEqual(date, cleanDate(selectedDate)),
+            otherMonth: date.getMonth() !== currentDate.getMonth()
           }">
       <span>
         {{ day }}
@@ -102,11 +108,11 @@ const cleanDate = (date: Date) => new Date(date.toDateString())
 
 <style scoped>
 .cell {
-  flex: 0 0 calc(100% / 7);
+  box-sizing: border-box;
+  width: calc(100% / 7);
   padding: 3px;
   text-align: center;
-  width: 50px;
-  height: 40px;
+  height: 42px;
   display: table;
   cursor: pointer;
 }
@@ -121,7 +127,7 @@ const cleanDate = (date: Date) => new Date(date.toDateString())
   line-height: 1;
 }
 
-.prevMonth {
+.otherMonth {
   opacity: .4;
 }
 

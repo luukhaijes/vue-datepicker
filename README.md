@@ -14,3 +14,9 @@ Install with NPM
 ```bash
 npm install vue-easy-datepicker
 ```
+
+## Todos
+- [ ] simplify date grid
+- [ ] "other month" should change **currentDate**
+- [ ] cache items
+- [ ] More events
