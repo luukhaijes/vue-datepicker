@@ -9,7 +9,7 @@
           {{ month }}
         </option>
       </select>
-      <select :value="pickerDate.getFullYear()" @change="(val) => setYear(val.target.value)">
+      <select :value="+pickerDate.getFullYear()" @change="(val) => setYear(val.target.value)">
         <option v-for="(year, index) in yearRange" :value="year" :key="index">
           {{ year }}
         </option>

@@ -20,8 +20,6 @@ const selectDate = (newSelectedDate: Date) => {
   }
 }
 
-const sm = setMonth
-
 </script>
 
 <template>
@@ -43,7 +41,6 @@ const sm = setMonth
   background-color: #fff;
   width: 315px;
   border-radius: 5px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   border: 1px solid #d9d9d9;

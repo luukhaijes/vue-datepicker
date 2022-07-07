@@ -1,6 +1,6 @@
 import { ref, unref } from "vue";
 import type  { Ref } from "vue"
-import addYears from 'date-fns/addYears';
+import changeYear from 'date-fns/setYear';
 import addMonths from 'date-fns/addMonths';
 import subMonths from 'date-fns/subMonths';
 
@@ -15,7 +15,7 @@ export function useDate(): UseDateFn {
   const date = ref<Date>(new Date);
 
   const setYear = (year: number) => {
-    const newDate = addYears(date.value, year);
+    const newDate = changeYear(date.value, year);
     setCurrentDate(newDate);
   }
 

@@ -1,5 +1,5 @@
 import { getDaysInMonth as fnsGetDaysInMonth } from "date-fns";
-import type { Dictionary } from "@/interfaces/dictionary.interface";
+import type { Dictionary } from "../interfaces/dictionary.interface";
 
 interface DateCell {
   day: number;
@@ -8,10 +8,10 @@ interface DateCell {
 }
 
 interface UseDateGrid {
-
+  getDaysGrid: (date: Date) => DateCell[]
 }
 
-function useDateGrid() {
+function useDateGrid(): UseDateGrid {
   const getDaysInMonth = (year: number, month: number): DateCell[] => {
     const pickerDate = new Date(year, month, 1);
 
@@ -46,7 +46,7 @@ function useDateGrid() {
 
   const setDaysArgs = (date: Date): [number, number] => [date.getFullYear(), date.getMonth()];
 
-  const getDaysGrid = (date: Date) => {
+  const getDaysGrid = (date: Date): DateCell[] => {
     if (!date) {
       return [];
     }
