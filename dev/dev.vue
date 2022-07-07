@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
-    <Datepicker :date="selectedDate" placeholder="Select Date" />
+    <p>current date: {{ selectedDate }}</p>
+    <Datepicker :date="selectedDate" @dateChange="(date) => selectedDate = date" placeholder="Select Date" />
   </div>
 </template>
 
@@ -12,8 +13,10 @@ const selectedDate = ref(new Date());
 </script>
 
 <style>
+@import "./base.css";
 /*@import "../dist/style.css";*/
 .wrapper {
   padding: 200px;
+  text-align: center;
 }
 </style>

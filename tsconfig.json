@@ -1,15 +1,32 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "dev/**/*", "dev/**/*.vue", "tests/**/*"],
-  "exclude": ["src/**/__tests__/*"],
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "src/**/*.ts",
+    "dev/**/*",
+    "dev/**/*.vue",
+    "tests/**/*"
+  ],
+  "exclude": [
+    "src/**/__tests__/*"
+  ],
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": ["./src/*"]
-    },
-    "lib": ["esnext", "dom"],
-    "target": "esnext",
-    "module": "esnext"
-  }
+      "@/*": [
+        "./src/"
+      ]
+    }
+  },
+  "lib": [
+    "esnext",
+    "dom"
+  ],
+  "target": "es2020",
+  "module": "esnext"
 }
