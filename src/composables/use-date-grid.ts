@@ -1,5 +1,5 @@
 import { getDaysInMonth as fnsGetDaysInMonth } from "date-fns";
-import type { Dictionary } from "../interfaces/dictionary.interface";
+import type { Dictionary } from "../interfaces/dictionary";
 
 interface DateCell {
   day: number;

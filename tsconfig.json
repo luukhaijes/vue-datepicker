@@ -5,8 +5,6 @@
     "src/**/*",
     "src/**/*.vue",
     "src/**/*.ts",
-    "dev/**/*",
-    "dev/**/*.vue",
     "tests/**/*"
   ],
   "exclude": [
@@ -18,8 +16,11 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": [
+      "@/": [
         "./src/"
+      ],
+      "@/*": [
+        "./src/*"
       ]
     }
   },

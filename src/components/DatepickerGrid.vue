@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DateCell } from "../interfaces/date-cell.interface";
+import type { DateCell } from "../interfaces/date-cell";
 import { ref, watch } from "vue";
 import { isEqual } from "date-fns";
 import { useDateGrid } from "../composables/use-date-grid";
