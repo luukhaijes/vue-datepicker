@@ -29,21 +29,12 @@ const { getMonthStrings } = useDate();
 
 const props = defineProps<{
   pickerDate: Date
-}>()
+}>();
 
 defineEmits<{
   (e: "selectPeriod", value: "month" | "year"): void;
   (e: "setMonth", value: number): void
-}>()
-
-const yearRange = computed(() => {
-  const years: number[] = [];
-  for (let i = 1900; i < 2101; i++) {
-    years.push(i);
-  }
-
-  return years;
-})
+}>();
 
 const allMonths = computed(() => getMonthStrings(props.pickerDate.getFullYear()));
 </script>
