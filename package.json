@@ -1,6 +1,13 @@
 {
   "name": "vue-easy-datepicker",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luukhaijes/vue-starrate"
+  },
+  "bugs": {
+    "url": "https://github.com/luukhaijes/vue-starrate/issues"
+  },
   "description": "Small datepicker for vue",
   "types": "index.d.ts",
   "main": "dist/datepicker.umd.js",

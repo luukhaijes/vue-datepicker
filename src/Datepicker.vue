@@ -4,10 +4,11 @@ import { ref } from "vue";
 import { useDate } from "./composables/use-date";
 import DatepickerHead from "./components/DatepickerHead.vue";
 import DatepickerControls from "./components/DatepickerControls.vue";
+import SelectOverview from "./components/SelectOverview.vue";
 
 defineProps<{ date?: Date }>();
 
-const { setYear, setMonth, date: datepickerDate } = useDate();
+const { setYear, setMonth, setMonthIncremental, date: datepickerDate } = useDate();
 
 const emits = defineEmits<{ (e: 'dateChange', value: Date): void }>();
 
@@ -20,19 +21,47 @@ const selectDate = (newSelectedDate: Date) => {
   }
 }
 
+const selectOverviewVisible = ref<boolean>(false);
+const selectOverviewPeriod = ref<string | null>(null);
+
+const setSelectOverview = (event: string) => {
+  if (selectOverviewPeriod.value !== event) {
+    selectOverviewPeriod.value = event;
+
+    if (!selectOverviewVisible.value) {
+      toggleOverview();
+    }
+    return;
+  }
+  console.log('la')
+  toggleOverview();
+}
+
+const toggleOverview = () => {
+  selectOverviewVisible.value = !selectOverviewVisible.value;
+  return true;
+}
+
 </script>
 
 <template>
   <div class="datepicker">
-    <DatepickerControls @setYear="setYear($event)" @setMonth="setMonth($event)" :picker-date="datepickerDate" />
-    <DatepickerHead />
-    <div class="datepicker__grid">
-      <DatepickerGrid
-        @daySelect="(selectedDay) => selectDate(selectedDay)"
-        :current-date="datepickerDate"
-        :selected-date="selectedDate">
-      </DatepickerGrid>
-    </div>
+    <DatepickerControls @setMonth="setMonthIncremental($event)" @selectPeriod="setSelectOverview($event)" :picker-date="datepickerDate" />
+    <template v-if="!selectOverviewVisible">
+      <DatepickerHead />
+      <div class="datepicker__grid">
+        <datepicker-grid
+          @daySelect="(selectedDay) => selectDate(selectedDay)"
+          :current-date="datepickerDate"
+          :selected-date="selectedDate" />
+      </div>
+    </template>
+    <select-overview
+      @setYear="toggleOverview() && setYear($event)"
+      @setMonth="toggleOverview() && setMonth($event)"
+      :overviewPeriod="selectOverviewPeriod"
+      :date="selectedDate"
+      v-else />
   </div>
 </template>
 
@@ -44,6 +73,7 @@ const selectDate = (newSelectedDate: Date) => {
   display: flex;
   flex-direction: column;
   border: 1px solid #d9d9d9;
+  height: 306px;
 }
 
 .datepicker__controls > :nth-child(2) {
